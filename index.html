@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>iTunes API Tutorial</title>
+    <link rel="shortcut icon" href="http://findicons.com/files/icons/2770/ios_7_icons/512/music.png">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/amplitudejs@3.2.3/dist/amplitude.js"></script>
+
+</head>
+
+<body>
+    <div class="parallax-container">
+        <h1>iTunes API Project</h1>
+        <div class="parallax">
+            <img src="records.jpg">
+        </div>
+    </div>
+    <nav>
+        <div class="nav-wrapper">
+            <form>
+                <div class="input-field">
+                    <input id="search" type="search" required>
+                    <label class="label-icon" for="search">
+                        <i class="material-icons">search</i>
+                    </label>
+                    <i class="material-icons">close</i>
+                </div>
+            </form>
+        </div>
+    </nav>
+    <img class="loading" src="https://d13yacurqjgara.cloudfront.net/users/99875/screenshots/1394920/rockstar_drib.gif">
+    <div class="slider hideMe">
+        <ul class="slides black">
+
+
+        </ul>
+    </div>
+
+    <div class="button amplitude-play-pause" amplitude-main-play-pause="true"></div>
+    <h2 class="hideMe">Now Playing:
+        <span amplitude-song-info="name" amplitude-main-song-info="true" class="song-name"></span>
+    </h2>
+    <div class="videoWrapper">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/J---aiyznGQ?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0"
+            frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+    </div>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+        // $(document).ready(... This is jQuery function that runs when the page is loaded.
+        // Do you want to load when the page is ready or when some button is clicked?
+        // Are you waiting for an input from the user???
+        $(document).ready(function () {
+            $('.parallax').parallax();
+
+            $(".hideMe").hide();
+            $(".loading").hide();
+            $("form").submit(function (event) {
+                event.preventDefault();
+                $(".hideMe").hide();
+                $("iframe").remove();
+                $(".loading").show();
+                var search = $("#search").val();
+                console.log(search);
+                getData(search);
+                $("form")[0].reset();
+                $("input").blur();
+            })
+            function getData(query) {
+                $.ajax({
+                    url: "https://itunes.apple.com/search?term=" + query + "&limit=5",
+                    dataType: 'JSONP'
+                })
+                    .done(function (data) {
+                        $(".hideMe").show();
+                        $(".loading").hide();
+                        console.log(data);
+                        // add code for when response from apple comes back.
+                        var amp = [];
+                        $(".slides").html("");
+                        $(".indicators").remove();
+                        for (var i = 0; i < data.results.length; i++) {
+                            if (data.results[i].trackName) {
+                                $(".slides").append(`
+                                    <li class="amplitude-play active" amplitude-song-index="${i}">
+                                        
+                                        <img src="${resizelink(data.results[i].artworkUrl100)}"> <!-- random image -->
+                                        <div class="caption center-align">
+                                        <h3>${data.results[i].trackName}</h3>
+                                        <h5 class="light grey-text text-lighten-3">${data.results[i].artistName}</h5>
+                                        <h5 class="light grey-text text-lighten-3">${data.results[i].collectionName}</h5>
+                                        </div>
+                                    </li>
+                            `);
+                                amp.push({
+                                    "name": data.results[i].trackName,
+                                    "artist": data.results[i].artistName,
+                                    "album": data.results[i].collectionName,
+                                    "url": data.results[i].previewUrl,
+                                    "cover_art_url": data.results[i].artowrkUrl100,
+                                })
+                            }
+                        }
+                        $('html, body').animate({
+                            scrollTop: $("nav").offset().top
+                        }, 1000)
+                        $('.slider').slider();
+                        Amplitude.init({
+                            "songs": amp
+                        });
+                    })
+                    .fail(function (data) {
+                        console.log(data);
+                        $('#songs').append(data.status);
+                    })
+            }
+        });// End of on ready part
+        function resizelink(link) {
+            link = link.slice(0, link.length - 13);
+            link += "1500x1500bb.jpg"
+            return link
+        }
+
+
+
+
+
+    </script>
+</body>
+
+</html>

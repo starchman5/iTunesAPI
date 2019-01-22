@@ -1,0 +1,52 @@
+.amplitude-paused{
+    background: url(http://www.wheresmilesbegin.com/assets/js/venobox//play-button.png) no-repeat center center;
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    border-radius: 25px;
+}
+.amplitude-playing{
+    background: url(https://www.harrisorganicwine.com.au/blog/wp-content/plugins/wp-photo-album-plus/img/Pause-Button.svg) no-repeat center center;
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    border-radius: 25px;
+}
+h2 {
+    text-align: center;
+    font-size: 18px;
+}
+.amplitude-play-pause {
+    margin: auto;
+}
+
+.loading {
+    width: 300px;
+    margin: auto;
+    display: block;
+}
+.parallax-container h1{
+    text-align: center;
+    vertical-align: middle;
+    line-height: 300px;
+    color: white;
+}
+.parallax-container {
+    height: 300px;
+}
+.slides img {
+    opacity: 0.5;
+} 
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+}
+.videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
